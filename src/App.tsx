@@ -184,7 +184,7 @@ const App: React.FC = () => {
   };
 
   const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const key = e.target.value;
+    const key = e.target.value.trim(); // Trim whitespace
     setGeminiKey(key);
     localStorage.setItem('gemini_api_key', key);
   };

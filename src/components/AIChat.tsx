@@ -71,9 +71,15 @@ Instructions:
       const text = response.text();
 
       setMessages((prev) => [...prev, { role: 'assistant', content: text }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Gemini API Error:', error);
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Error: Failed to get response from Gemini. Please check your API key.' }]);
+      let errorMessage = 'Error: Failed to get response from Gemini.';
+      if (error.message?.includes('API_KEY_INVALID')) {
+        errorMessage = 'Invalid API Key. Please check your key and try again.';
+      } else if (error.message) {
+        errorMessage = `Error: ${error.message}`;
+      }
+      setMessages((prev) => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }

@@ -21,6 +21,7 @@ export const AIChat: React.FC<AIChatProps> = ({ apiKey, currentFileContent, file
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
+  const [selectedModel, setSelectedModel] = React.useState('gemini-1.5-flash');
 
   const getFullProjectStructure = (items: FileSystemItem[], depth = 0): string => {
     let structure = '';
@@ -43,7 +44,13 @@ export const AIChat: React.FC<AIChatProps> = ({ apiKey, currentFileContent, file
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      // Fallback logic for model names
+      let model;
+      try {
+        model = genAI.getGenerativeModel({ model: selectedModel });
+      } catch (e) {
+        model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+      }
 
       const projectStructure = getFullProjectStructure(projectFiles);
 
@@ -76,6 +83,8 @@ Instructions:
       let errorMessage = 'Error: Failed to get response from Gemini.';
       if (error.message?.includes('API_KEY_INVALID')) {
         errorMessage = 'Invalid API Key. Please check your key and try again.';
+      } else if (error.message?.includes('404')) {
+        errorMessage = `Model "${selectedModel}" not found. Try switching to "gemini-1.5-flash-latest" in settings if available or check your API key permissions.`;
       } else if (error.message) {
         errorMessage = `Error: ${error.message}`;
       }
@@ -99,8 +108,20 @@ Instructions:
 
   return (
     <div className={`flex flex-col h-full ${isDark ? 'bg-[#1e1e1e] text-white border-[#333]' : 'bg-[#f3f3f3] text-black border-[#cccccc]'} border-l w-80`}>
-      <div className={`p-4 border-b ${isDark ? 'border-[#333]' : 'border-[#cccccc]'} font-bold flex items-center gap-2`}>
-        <Bot size={18} className="text-blue-400" /> AI Assistant
+      <div className={`p-4 border-b ${isDark ? 'border-[#333]' : 'border-[#cccccc]'} font-bold flex items-center justify-between`}>
+        <div className="flex items-center gap-2">
+            <Bot size={18} className="text-blue-400" /> AI Assistant
+        </div>
+        <select
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className={`text-[10px] bg-transparent border ${isDark ? 'border-[#444]' : 'border-[#ccc]'} rounded px-1 outline-none`}
+        >
+            <option value="gemini-1.5-flash">1.5 Flash</option>
+            <option value="gemini-1.5-flash-latest">1.5 Flash Latest</option>
+            <option value="gemini-1.5-pro">1.5 Pro</option>
+            <option value="gemini-2.0-flash-exp">2.0 Flash (Exp)</option>
+        </select>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (

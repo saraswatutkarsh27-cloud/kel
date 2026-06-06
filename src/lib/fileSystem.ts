@@ -49,3 +49,16 @@ export async function writeFile(fileHandle: FileSystemFileHandle, content: strin
   await writable.write(content);
   await writable.close();
 }
+
+export async function createFile(directoryHandle: FileSystemDirectoryHandle, name: string): Promise<FileSystemFileHandle> {
+  return await directoryHandle.getFileHandle(name, { create: true });
+}
+
+export async function createDirectory(directoryHandle: FileSystemDirectoryHandle, name: string): Promise<FileSystemDirectoryHandle> {
+  return await directoryHandle.getDirectoryHandle(name, { create: true });
+}
+
+export async function deleteItem(directoryHandle: FileSystemDirectoryHandle, name: string): Promise<void> {
+  // @ts-ignore
+  await directoryHandle.removeEntry(name, { recursive: true });
+}

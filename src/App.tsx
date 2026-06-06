@@ -349,6 +349,8 @@ const App: React.FC = () => {
           onApplyCode={handleApplyCode}
           theme={theme}
           projectFiles={fileSystem}
+          rootHandle={rootHandle}
+          onRefreshFileSystem={refreshFileSystem}
         />
       </div>
 

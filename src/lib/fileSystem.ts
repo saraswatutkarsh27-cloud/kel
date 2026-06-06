@@ -62,3 +62,28 @@ export async function deleteItem(directoryHandle: FileSystemDirectoryHandle, nam
   // @ts-ignore
   await directoryHandle.removeEntry(name, { recursive: true });
 }
+
+export function findHandleByPath(items: FileSystemItem[], path: string): FileSystemHandle | null {
+  for (const item of items) {
+    if (item.path === path) {
+      return item.handle;
+    }
+    if (item.children) {
+      const found = findHandleByPath(item.children, path);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+export function findParentDirectoryHandle(items: FileSystemItem[], path: string, rootHandle: FileSystemDirectoryHandle | null): FileSystemDirectoryHandle | null {
+  const parts = path.split('/');
+  if (parts.length <= 1) return rootHandle;
+
+  const parentPath = parts.slice(0, -1).join('/');
+  const handle = findHandleByPath(items, parentPath);
+  if (handle && handle.kind === 'directory') {
+    return handle as FileSystemDirectoryHandle;
+  }
+  return null;
+}

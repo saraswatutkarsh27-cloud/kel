@@ -1,5 +1,17 @@
 import React from 'react';
-import { File, Folder, ChevronRight, ChevronDown, FilePlus, FolderPlus, Trash2 } from 'lucide-react';
+import {
+  File,
+  Folder,
+  ChevronRight,
+  ChevronDown,
+  FilePlus,
+  FolderPlus,
+  Trash2,
+  FileCode,
+  FileJson,
+  FileImage,
+  FileText
+} from 'lucide-react';
 import type { FileSystemItem } from '../lib/fileSystem';
 
 interface FileTreeProps {
@@ -9,6 +21,31 @@ interface FileTreeProps {
   onCreateFolder: (parent: FileSystemDirectoryHandle) => void;
   onDelete: (item: FileSystemItem) => void;
 }
+
+const getFileIcon = (name: string) => {
+  const ext = name.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'js':
+    case 'jsx':
+    case 'ts':
+    case 'tsx':
+      return <FileCode size={14} className="text-yellow-400" />;
+    case 'json':
+      return <FileJson size={14} className="text-yellow-500" />;
+    case 'html':
+    case 'css':
+      return <FileCode size={14} className="text-orange-400" />;
+    case 'md':
+      return <FileText size={14} className="text-blue-300" />;
+    case 'png':
+    case 'jpg':
+    case 'jpeg':
+    case 'svg':
+      return <FileImage size={14} className="text-purple-400" />;
+    default:
+      return <File size={14} className="text-gray-400" />;
+  }
+};
 
 const FileTreeItem: React.FC<{
   item: FileSystemItem;
@@ -38,17 +75,17 @@ const FileTreeItem: React.FC<{
         {item.kind === 'directory' ? (
           <>
             {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            <Folder size={14} className="text-blue-400" />
+            <Folder size={14} className="text-blue-400 fill-blue-400/20" />
           </>
         ) : (
           <>
             <div className="w-[14px]" />
-            <File size={14} className="text-gray-400" />
+            {getFileIcon(item.name)}
           </>
         )}
-        <span className="truncate flex-1">{item.name}</span>
+        <span className="truncate flex-1 ml-1">{item.name}</span>
 
-        <div className="hidden group-hover:flex items-center gap-1">
+        <div className="hidden group-hover:flex items-center gap-1 opacity-70">
           {item.kind === 'directory' && (
             <>
               <button
@@ -110,6 +147,11 @@ export const FileExplorer: React.FC<FileTreeProps & { onOpenFolder: () => void, 
         </div>
       </div>
       <div className="flex-1 overflow-y-auto">
+        {items.length === 0 && (
+            <div className="p-4 text-xs text-gray-500 text-center">
+                No folder opened. Click "Open" to start.
+            </div>
+        )}
         {items.map((item) => (
           <FileTreeItem
             key={item.path}

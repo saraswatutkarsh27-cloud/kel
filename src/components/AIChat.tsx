@@ -21,7 +21,7 @@ export const AIChat: React.FC<AIChatProps> = ({ apiKey, currentFileContent, file
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [input, setInput] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [selectedModel, setSelectedModel] = React.useState('gemini-1.5-flash');
+  const [selectedModel, setSelectedModel] = React.useState('gemini-3.5-flash');
 
   const getFullProjectStructure = (items: FileSystemItem[], depth = 0): string => {
     let structure = '';
@@ -44,13 +44,7 @@ export const AIChat: React.FC<AIChatProps> = ({ apiKey, currentFileContent, file
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      // Fallback logic for model names
-      let model;
-      try {
-        model = genAI.getGenerativeModel({ model: selectedModel });
-      } catch (e) {
-        model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
-      }
+      const model = genAI.getGenerativeModel({ model: selectedModel });
 
       const projectStructure = getFullProjectStructure(projectFiles);
 
@@ -84,7 +78,7 @@ Instructions:
       if (error.message?.includes('API_KEY_INVALID')) {
         errorMessage = 'Invalid API Key. Please check your key and try again.';
       } else if (error.message?.includes('404')) {
-        errorMessage = `Model "${selectedModel}" not found. Try switching to "gemini-1.5-flash-latest" in settings if available or check your API key permissions.`;
+        errorMessage = `Model "${selectedModel}" not found. Please ensure you have access to this model or try selecting a different one from the dropdown.`;
       } else if (error.message) {
         errorMessage = `Error: ${error.message}`;
       }
@@ -117,6 +111,7 @@ Instructions:
             onChange={(e) => setSelectedModel(e.target.value)}
             className={`text-[10px] bg-transparent border ${isDark ? 'border-[#444]' : 'border-[#ccc]'} rounded px-1 outline-none`}
         >
+            <option value="gemini-3.5-flash">3.5 Flash</option>
             <option value="gemini-1.5-flash">1.5 Flash</option>
             <option value="gemini-1.5-flash-latest">1.5 Flash Latest</option>
             <option value="gemini-1.5-pro">1.5 Pro</option>

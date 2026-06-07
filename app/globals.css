@@ -1,0 +1,295 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ── Design Tokens ────────────────────────────── */
+  --bg-base: #0d0f12;
+  --bg-surface: #111318;
+  --bg-elevated: #1a1d24;
+  --bg-hover: #1f232d;
+  --bg-active: #252a36;
+  --border-subtle: #1e2228;
+  --border-default: #2a2f3d;
+  --border-strong: #3d4455;
+  --text-primary: #e8eaf0;
+  --text-secondary: #8b92a8;
+  --text-muted: #4a5068;
+  --text-accent: #4fc3f7;
+  --color-error: #f07178;
+  --color-warning: #ffcc80;
+  --color-success: #c3e88d;
+  --color-info: #82aaff;
+  --color-ai: #c792ea;
+  --agent-plan: #ffcc80;
+  --agent-tool: #82aaff;
+  --agent-result: #c3e88d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', 'Geist', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color-scheme: dark;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
+/* ── Custom Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 195, 247, 0.2);
+  border-radius: 100px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 195, 247, 0.4);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 195, 247, 0.25) transparent;
+}
+
+/* ── Selection ──────────────────────────────────────────── */
+::selection {
+  background: rgba(79, 195, 247, 0.35);
+  color: #fff;
+}
+
+/* ── Glassmorphism Utility ──────────────────────────────── */
+@layer utilities {
+  .glass {
+    background: rgba(17, 19, 24, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(79, 195, 247, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(17, 19, 24, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(79, 195, 247, 0.15);
+  }
+
+  .glow-border {
+    box-shadow: 0 0 0 1px rgba(79, 195, 247, 0.3),
+                0 0 15px rgba(79, 195, 247, 0.1);
+  }
+
+  .glow-border-active {
+    box-shadow: 0 0 0 1px rgba(79, 195, 247, 0.5),
+                0 0 20px rgba(79, 195, 247, 0.2);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #4fc3f7 0%, #82aaff 50%, #c792ea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(
+      90deg,
+      rgba(79, 195, 247, 0) 0%,
+      rgba(79, 195, 247, 0.08) 50%,
+      rgba(79, 195, 247, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+/* ── Markdown Content in Chat ───────────────────────────── */
+.chat-markdown {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.chat-markdown p {
+  margin: 0.4em 0;
+}
+
+.chat-markdown p:first-child {
+  margin-top: 0;
+}
+
+.chat-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-markdown code {
+  font-family: 'JetBrains Mono', 'Geist Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  background: rgba(79, 195, 247, 0.12);
+  color: #82aaff;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  border: 1px solid rgba(79, 195, 247, 0.15);
+}
+
+.chat-markdown pre {
+  margin: 0.6em 0;
+  padding: 0.75rem 1rem;
+  background: rgba(13, 15, 18, 0.8);
+  border: 1px solid rgba(79, 195, 247, 0.15);
+  border-radius: 8px;
+  overflow-x: auto;
+  position: relative;
+}
+
+.chat-markdown pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+}
+
+.chat-markdown ul, .chat-markdown ol {
+  margin: 0.4em 0;
+  padding-left: 1.5em;
+}
+
+.chat-markdown li {
+  margin: 0.15em 0;
+}
+
+.chat-markdown h1, .chat-markdown h2, .chat-markdown h3 {
+  font-weight: 600;
+  margin: 0.6em 0 0.3em;
+}
+
+.chat-markdown h1 { font-size: 1.1em; }
+.chat-markdown h2 { font-size: 1em; }
+.chat-markdown h3 { font-size: 0.9em; }
+
+.chat-markdown strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.chat-markdown em {
+  color: var(--text-secondary);
+}
+
+.chat-markdown blockquote {
+  border-left: 3px solid rgba(79, 195, 247, 0.4);
+  margin: 0.5em 0;
+  padding: 0.3em 0.8em;
+  background: rgba(79, 195, 247, 0.05);
+  border-radius: 0 6px 6px 0;
+  color: var(--text-secondary);
+}
+
+.chat-markdown a {
+  color: var(--color-info);
+  text-decoration: none;
+}
+
+.chat-markdown a:hover {
+  text-decoration: underline;
+}
+
+.chat-markdown hr {
+  border: none;
+  border-top: 1px solid rgba(79, 195, 247, 0.15);
+  margin: 0.8em 0;
+}
+
+/* ── Focus Ring ─────────────────────────────────────────── */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(79, 195, 247, 0.5);
+  outline-offset: 1px;
+}
+
+/* ── Monaco Editor Overrides ────────────────────────────── */
+.monaco-editor .margin {
+  background: transparent !important;
+}
+
+/* ── Tab Drag Ghost ─────────────────────────────────────── */
+.tab-ghost {
+  opacity: 0.5;
+}
+
+/* ── Smooth Transitions ─────────────────────────────────── */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Terminal styles ────────────────────────────────────── */
+.xterm {
+  padding: 8px;
+  height: 100%;
+}
+
+.xterm-viewport {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79, 195, 247, 0.25) transparent;
+}
+
+/* ── Animate In/Out for toasts ──────────────────────────── */
+.animate-in {
+  animation-duration: 0.2s;
+}
+
+.animate-out {
+  animation-duration: 0.2s;
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.slide-in-from-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.slide-out-to-right {
+  animation: slideOutRight 0.2s ease-in forwards;
+}
+
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(100%); }
+}
